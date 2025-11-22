@@ -68,7 +68,7 @@ export default function MessageList({
   }, [messages]);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 px-1 sm:px-2">
       {messages.map((m) => {
         const isMe = m.senderId === currentUserId || m.sender === currentUser;
         const key = m._id || m.id || m.tempId;
@@ -91,8 +91,9 @@ export default function MessageList({
                 )}
               </div>
             )}
-
-            <div className={`max-w-[70%] p-3 rounded ${isMe ? "bg-indigo-600 text-white" : "bg-gray-800 text-gray-200"}`}>
+          <div
+          className={`max-w-[80%] sm:max-w-[70%] p-3 rounded break-words ${isMe ? "bg-indigo-600 text-white" : "bg-gray-800 text-gray-200"
+}`}>
               <div className="text-xs text-gray-300 mb-1 flex items-center justify-between gap-2">
                 <span className="font-semibold">{m.sender || (isMe ? currentUser : "Unknown")}</span>
                 <span className="text-[10px] text-gray-400">{formatTime(m.timestamp)}</span>

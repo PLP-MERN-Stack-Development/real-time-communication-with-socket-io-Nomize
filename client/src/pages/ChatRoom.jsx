@@ -251,7 +251,8 @@ export default function ChatRoom({ username, avatar }) {
   };
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-b from-[#071024] to-[#03040a] text-white">
+    <div className="min-h-screen flex flex-col md:flex-row overflow-hidden bg-gradient-to-b from-[#071024] to-[#03040a] text-white">
+      
       <Sidebar
         username={username}
         avatar={avatar}
@@ -266,100 +267,116 @@ export default function ChatRoom({ username, avatar }) {
         closeSidebar={() => setSidebarOpen(false)}
       />
 
-      <main className="flex-1 flex flex-col min-w-0 relative">
-        {/* HEADER */}
-        <div className="px-4 py-3 border-b border-gray-800 bg-[#0f1624] shadow flex items-center justify-between">
-          <button className="text-2xl md:hidden" onClick={() => setSidebarOpen(true)}>
-            ☰
-          </button>
+      <main className="flex-1 flex flex-col min-w-0 relative overflow-hidden">
 
-          <div className="flex-1 flex flex-col items-center mx-auto max-w-2xl">
-            <div className="w-full flex items-center gap-3">
-              <div className="flex-1 text-left">
-                <span className="text-xl font-bold text-indigo-400 tracking-wide">CozyCorner</span>
-{activeChat.startsWith("dm_") && activeDMAvatar && (
-  <img
-    src={activeDMAvatar}
-    className="w-8 h-8 rounded-full object-cover mb-1 border border-gray-700"
-  />
-)}
+{/* HEADER */}
+<header className="w-full px-3 py-2 border-b border-gray-800 bg-[#0f1624] shadow flex items-center justify-between md:gap-4">
 
-                <div className="text-xs text-gray-400">{label}</div>
-              </div>
+  {/* mobile sidebar toggle */}
+  <button
+    className="text-2xl md:hidden mr-2"
+    onClick={() => setSidebarOpen(true)}
+  >
+    ☰
+  </button>
 
-              {/* SEARCH INPUT */}
-              <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  placeholder="Search messages..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="px-3 py-1 rounded bg-gray-800 text-gray-300 text-sm focus:outline-none border border-gray-700"
-                />
-                <button
-                  onClick={() => {
-                    setSearchQuery("");
-                    setFilterMode("all");
-                    setFilterSender("");
-                    setFilterDateFrom("");
-                    setFilterDateTo("");
-                  }}
-                  className="px-2 py-1 text-xs bg-gray-700 rounded"
-                >
-                  Reset
-                </button>
-              </div>
-            </div>
+  {/* center section */}
+  <div className="flex-1 flex flex-col justify-center min-w-0">
 
-            {/* FILTERS */}
-            <div className="mt-2 w-full flex gap-2 items-center">
-              <select
-                value={filterMode}
-                onChange={(e) => setFilterMode(e.target.value)}
-                className="px-2 py-1 bg-gray-800 text-sm rounded border border-gray-700"
-              >
-                <option value="all">All</option>
-                <option value="text">Text only</option>
-                <option value="files">Files only</option>
-                <option value="sender">By sender</option>
-                <option value="date">By date</option>
-              </select>
+    {/* title + avatar */}
+    <div className="flex items-center gap-2">
+      <span className="text-lg font-bold text-indigo-400 truncate">
+        CozyCorner
+      </span>
 
-              {filterMode === "sender" && (
-                <select
-                  value={filterSender}
-                  onChange={(e) => setFilterSender(e.target.value)}
-                  className="px-2 py-1 bg-gray-800 text-sm rounded border border-gray-700"
-                >
-                  <option value="">— Choose sender —</option>
-                  {users.map(u => <option key={u.id} value={u.id}>{u.username}</option>)}
-                </select>
-              )}
+      {activeChat.startsWith("dm_") && activeDMAvatar && (
+        <img
+          src={activeDMAvatar}
+          className="w-7 h-7 rounded-full object-cover border border-gray-700"
+        />
+      )}
+    </div>
 
-              {filterMode === "date" && (
-                <>
-                  <input
-                    type="date"
-                    value={filterDateFrom}
-                    onChange={(e) => setFilterDateFrom(e.target.value)}
-                    className="px-2 py-1 bg-gray-800 text-sm rounded border border-gray-700"
-                  />
-                  <input
-                    type="date"
-                    value={filterDateTo}
-                    onChange={(e) => setFilterDateTo(e.target.value)}
-                    className="px-2 py-1 bg-gray-800 text-sm rounded border border-gray-700"
-                  />
-                </>
-              )}
-            </div>
-          </div>
+    {/* room or name */}
+    <div className="text-xs text-gray-400 truncate">{label}</div>
+  </div>
 
-          <div className="text-sm text-gray-400">{users.length} online</div>
-        </div>
+  {/* search */}
+  <div className="flex items-center gap-2 min-w-[130px] md:min-w-[220px]">
+    <input
+      type="text"
+      placeholder="Search..."
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+      className="px-2 py-1 rounded bg-gray-800 text-gray-300 text-xs w-full border border-gray-700"
+    />
+    <button
+      onClick={() => {
+        setSearchQuery("");
+        setFilterMode("all");
+        setFilterSender("");
+        setFilterDateFrom("");
+        setFilterDateTo("");
+      }}
+      className="px-2 py-1 text-xs bg-gray-700 rounded whitespace-nowrap"
+    >
+      Reset
+    </button>
+  </div>
 
-        {/* MESSAGE AREA */}
-        <div className="flex-1 overflow-y-auto p-4 pb-32 mt-2">
+  {/* online count */}
+  <div className="hidden md:block text-sm text-gray-400 whitespace-nowrap ml-2">
+    {users.length} online
+  </div>
+</header>
+
+
+{/* FILTERS */}
+<div className="mt-2 w-full flex flex-wrap gap-2 items-center px-3">
+  <select
+    value={filterMode}
+    onChange={(e) => setFilterMode(e.target.value)}
+    className="px-2 py-1 bg-gray-800 text-sm rounded border border-gray-700"
+  >
+    <option value="all">All</option>
+    <option value="text">Text only</option>
+    <option value="files">Files only</option>
+    <option value="sender">By sender</option>
+    <option value="date">By date</option>
+  </select>
+
+  {filterMode === "sender" && (
+    <select
+      value={filterSender}
+      onChange={(e) => setFilterSender(e.target.value)}
+      className="px-2 py-1 bg-gray-800 text-sm rounded border border-gray-700"
+    >
+      <option value="">— Choose sender —</option>
+      {users.map(u => <option key={u.id} value={u.id}>{u.username}</option>)}
+    </select>
+  )}
+
+  {filterMode === "date" && (
+    <>
+      <input
+        type="date"
+        value={filterDateFrom}
+        onChange={(e) => setFilterDateFrom(e.target.value)}
+        className="px-2 py-1 bg-gray-800 text-sm rounded border border-gray-700"
+      />
+      <input
+        type="date"
+        value={filterDateTo}
+        onChange={(e) => setFilterDateTo(e.target.value)}
+        className="px-2 py-1 bg-gray-800 text-sm rounded border border-gray-700"
+      />
+    </>
+  )}
+</div>
+
+{/* MESSAGE AREA */}
+<div className="flex-1 overflow-y-auto p-4 pb-32 mt-2">
+
           <MessageList
             messages={sortedActiveMessages}
             currentUser={username}
@@ -385,7 +402,7 @@ export default function ChatRoom({ username, avatar }) {
         )}
 
         {/* INPUT BAR */}
-        <div className="border-t border-gray-800 p-3 bg-gray-900 fixed bottom-0 left-0 md:left-64 right-0 z-50">
+        <div className="border-t border-gray-800 p-3 bg-gray-900 fixed bottom-0 left-0 md:left-64 right-0 w-full z-50">
           <MessageInput
             ref={messageInputRef}
             onSend={handleSend}

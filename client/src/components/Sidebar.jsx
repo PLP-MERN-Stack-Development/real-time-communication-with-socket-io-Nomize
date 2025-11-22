@@ -30,11 +30,17 @@ export default function Sidebar({
           onClick={closeSidebar}
         />
       )}
+<aside
+  className={`
+    fixed inset-y-0 left-0 z-50 w-64 bg-gray-900 border-r border-gray-800 
+    transform transition-transform duration-300
+    ${isOpen ? "translate-x-0" : "-translate-x-full"}
+    md:translate-x-0 md:static md:flex
+  `}
+  style={{ flexDirection: "column", maxHeight: "100vh", overflow: "hidden" }}
+>
 
-      <aside
-        className={`fixed md:relative inset-y-0 left-0 z-50 w-64 bg-gray-900 border-r border-gray-800 transform transition-all ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
-        style={{ display: "flex", flexDirection: "column", maxHeight: "100vh" }}
-      >
+
         <div className="p-4 border-b border-gray-800 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-10 h-10 rounded-full overflow-hidden">
